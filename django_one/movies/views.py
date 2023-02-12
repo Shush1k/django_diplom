@@ -2,8 +2,9 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.views.generic import View, ListView, DetailView
 from django.db.models import Q
-from .models import Movie, Actor, Genre, Category
+from .models import Movie, Actor, Genre, Category, Rating
 from .forms import ReviewForm, RatingForm
+from django.http import JsonResponse, HttpResponse
 
 
 class MovieMixin:
@@ -52,6 +53,21 @@ class AddReview(View):
             form.save()
 
         return redirect(movie.get_absolute_url())
+
+
+class AddStarRating(View):
+    """Добавление рейтинга фильму"""
+    def post(self, request):
+        form = RatingForm(request.POST)
+        if form.is_valid():
+            Rating.objects.update_or_create(
+                ip=request.user.email,
+                movie_id=int(request.POST.get("movie")),
+                defaults={'star_id': int(request.POST.get("star"))}
+            )
+            return HttpResponse(status=201)
+        else:
+            return HttpResponse(status=400)
 
 
 class ActorDetailView(DetailView):

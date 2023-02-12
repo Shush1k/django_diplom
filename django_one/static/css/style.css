@@ -716,7 +716,7 @@ span.product-new-top {
     position: relative;
     display: block;
     float: right;
-    background: url('../images/star-off-big.png');
+    background: url('../images/star-off.png');
     background-size: 30px 30px;
 }
 
@@ -726,13 +726,17 @@ span.product-new-top {
     content: '';
     width: 30px;
     height: 30px;
-    background: url('../images/star-on-big.png');
+    background: url('../images/star-on.png');
     background-size: 30px 30px;
     transition: opacity 0.2s linear;
 }
 
 .rating > label:hover:before, .rating > label:hover ~ label:before, .rating:not(:hover) > :checked ~ label:before {
     opacity: 1;
+}
+
+.avg-rating {
+    font-size: 24px;
 }
 
 /* //Checkbox stars */

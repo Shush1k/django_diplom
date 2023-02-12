@@ -10,6 +10,7 @@ urlpatterns = [
     path("movies/", views.MovieView.as_view(), name="movies"),
     path("filter/", views.FilterMoviesView.as_view(), name='filter'),
     path("search/", views.Search.as_view(), name="search"),
+    path("add-rating/", views.AddStarRating.as_view(), name='add_rating'),
     path("category/<str:cat_name>/", views.get_category_movies, name="catt"),
     # путь выше имеет атрибут name="catt", который может использоваться в модели, как get_absolute_url
     # или же вместо этого используя тэг {% 'url' %} в шаблонах

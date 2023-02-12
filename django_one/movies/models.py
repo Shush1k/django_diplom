@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from datetime import date, datetime
+from django.db.models import Avg
 
 
 class Category(models.Model):
@@ -92,6 +93,9 @@ class Movie(models.Model):
 
     def get_review(self):
         return self.reviews_set.filter(parent__isnull=True)
+
+    def get_rating(self):
+        return round(self.ratings.aggregate(Avg('star'))['star__avg'],1)
 
     class Meta:
         verbose_name = "Фильм"

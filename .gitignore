@@ -5,5 +5,4 @@ cache/
 .idea/workspace.xml
 .git/
 Dockerfile
-static/
 *pyc

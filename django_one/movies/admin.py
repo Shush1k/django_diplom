@@ -20,6 +20,11 @@ class GenreAdmin(admin.ModelAdmin):
     list_display = ("name", "url",)
 
 
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    list_display = ("star", "movie", "ip")
+
+
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "description",)
     list_display_links = ("name",)
@@ -141,7 +146,7 @@ class MovieShotsAdmin(admin.ModelAdmin):
 # оставил чтобы помнить что так тоже можно
 admin.site.register(Category, CategoryAdmin)
 # admin.site.register(Rating)
-# admin.site.register(RatingStar)
+admin.site.register(RatingStar)
 
 admin.AdminSite.site_header = "Администрирование Movies"
 admin.AdminSite.index_title = "Панель администрирования"
