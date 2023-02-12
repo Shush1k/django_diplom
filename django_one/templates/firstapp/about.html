@@ -1,0 +1,11 @@
+{% extends "firstapp/base.html" %}
+{% load static %}
+
+
+{% block title %}About{% endblock title %}
+{% block header %}
+About page
+<link rel="stylesheet" href="{% static "styles/style.css" %}" />{% endblock header %}
+{% block content%}
+<p>About page text which extends base.html template</p>
+{% endblock content %}

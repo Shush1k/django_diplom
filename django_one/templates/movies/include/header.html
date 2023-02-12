@@ -1,0 +1,77 @@
+{% load movie_tag %}
+{% load cache %}
+
+<header class="header">
+    <div class="container-fluid px-lg-5">
+
+        <nav class="py-4">
+            <div class="logo">
+                <h1><a href="{% url 'movies:movies' %}" class="editContent">Movies</a>
+                </h1>
+            </div>
+
+            <label for="drop" class="toggle">Menu</label>
+            <input type="checkbox" id="drop">
+            <ul class="menu mt-2">
+                {% url 'movies:movies' as movies_url %}
+                {% if movies_url == request.path %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                {% endif %}<a href="{% url 'movies:movies' %}">Главная</a></li>
+
+
+                <li>
+                    <label for="drop-2" class="toggle">Категории
+                        <span class="fa fa-angle-down" aria-hidden="true"></span> </label>
+                    <a href="#">Категории <span class="fa fa-angle-down"
+                                                aria-hidden="true"></span></a>
+                    <input type="checkbox" id="drop-2">
+                    <ul>
+{#                        {% cache 500 categ %}#}
+                        {% get_categories as categories %}
+
+                        {% for category in categories %}
+                            {#                             тот самый пример использования %url% #}
+                            {#                             работают оба варианта, поскольку есть метод get_absolute_url в самой модели Category#}
+
+                            {% url 'movies:catt' category.url as catt_url %}
+                            {% if catt_url  == request.path %}
+                                <li class="active">
+                                    {% else %}
+                                <li>
+                            {% endif %}<a href="{{ catt_url }}">{{ category.name }}</a></li>
+                            {#                            <li><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>#}
+                        {% endfor %}
+{#                        {% endcache %}#}
+                    </ul>
+                </li>
+                {% if "contact" in request.path %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                {% endif %}<a href="{% url 'contact' %}">Контакты</a>
+                </li>
+
+                {% if "about" in request.path %}
+                    <li class="active">
+                        {% else %}
+                    <li>
+                {% endif %}<a href="{% url 'about' %}">
+                <span>О сайте</span></a>
+                    </li>
+
+                {% if user.is_authenticated %}
+                    <li>
+                    <a href="{% url 'logout' %}">Выйти</a>
+                        </li>
+                {% else %}
+                        <li>
+                    <a href="{% url 'login' %}">Войти</a> |
+                    <a href="{% url 'register' %}">Sign up</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</header>

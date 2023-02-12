@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block header %} django-banner {% endblock header %}
+
+{% block content %}
+    <section class="ab-info-main py-md-5 py-4 editContent">
+        {% block container %}
+            <div class="container-fluid py-md-3 pl-lg-5">
+        {% endblock container %}
+        <div class="left-ads-display">
+            <div class="p-lg-4 row">
+                <div class="px-lg-2">
+                    <img src="{% static 'images/about_author.jpeg' %}" class="avatar-user" alt="">
+                    <div class="mt-3 text-center">
+                        <a href="https://github.com/Shush1k/">
+                            <button type="button" class="btn">
+                            Ссылка github
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                <div class="desc1-right col-md-7">
+
+                    <h3 class="editContent">
+                        Написан на Django 4
+
+                    </h3>
+                    <span><b>Дата написания сайта:</b> 05.05.2022 - 11.05.2022 </span>
+
+
+                    <div class="mt-5">
+                        <h3 class="shop-sing">
+                            О сайте
+                        </h3>
+                        <p>
+                            Данный сайт был создан в течении нескольких дней и является моим первым опытом работы с
+                            Django Framework.
+                            При его создании я получил представление о паттерне MVT, научился строить url маршруты,
+                            модели и представления. Получил представление об административной панели.
+                            Данный сайт предоставляет информацию о фильмах, актерах и режисерах. Имеет поиск по фильмам,
+                            фильтарцию по жанрам и годам.
+                            Имеет навигационную панель сверху, которая позволяет получать записи по определенной
+                            категории. Каждый фильм/сериал и т.п. имеет свою отдельную странницу. Имеется возможность
+                            оставить комментарий.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+{% endblock content %}

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="pl-lg-4">
+        <span>Ссылка верификация некорректна, авторизуйтесь чтобы получить ссылку повторно</span>
+        <br>
+    <a href="{% url 'login' %}" class="btn btn-primary">Войти</a>
+    </div>
+
+{% endblock content %}

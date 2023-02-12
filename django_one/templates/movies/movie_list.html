@@ -1,0 +1,36 @@
+{% extends 'movies/base.html' %}
+
+{% block title %} {% endblock title %}
+{% block movie %}
+<div class="left-ads-display col-lg-9">
+    <div class="row">
+        {% for movie in movie_list%}
+        <div class="col-md-4 product-men">
+            <div class="text-center mt-lg-4">
+                <div class="men-thumb-item">
+                    <a href="{{ movie.get_absolute_url }}">
+                    <img src="{{ movie.poster.url }}" class="img-fluid" alt="">
+                    </a>
+                </div>
+                <div class="item-info-product">
+                    <h4>
+                        <a href="{{ movie.get_absolute_url }}" class="editContent">
+                            {{ movie.title }}
+                        </a>
+                    </h4>
+
+                    <div class="tagline">
+                        <span class="tag editContent">
+                            {{ movie.tagline }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+        <div class="mt-4 text-right bg bg1" >
+            {% include './include/pagination.html' %}
+        </div>
+</div>
+{% endblock movie %}

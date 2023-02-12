@@ -1,0 +1,9 @@
+venv
+.DS_Store
+cache/
+.idea
+.idea/workspace.xml
+.git/
+Dockerfile
+static/
+*pyc
