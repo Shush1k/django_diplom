@@ -10,11 +10,11 @@ Start Content
 {% block content %}
 <section>
   <div class="innerPageBannerCol">
-    <div class="container">
+    <div class="container col-lg-auto">
       <div class="row g-4 g-md-3  align-items-center">
         <div class="col-md-6">
           <div class="bannerContent">
-            <h1 class="xlTitle pb-md-3">Contact us</h1>
+            <h1 class="xlTitle pb-md-3">Сообщите нам о своей проблеме</h1>
           </div>
         </div>
       </div>
@@ -24,19 +24,18 @@ Start Content
 
 <section>
   <div class="lightBg">
-    <div class="container">
+    <div class="container col-lg-6">
         <form id="contactForm" method="POST" action="/contact/">
         {% csrf_token %}
-            <label class="my-lg-3" for="topic">Topic</label>
+            <label class="my-lg-3" for="topic">Тема</label>
             {{form.topic}}
 
-            <label class="my-lg-3" for="email">Email</label>
             {{form.email.as_hidden}}
 
-            <label class="my-lg-3" for="subject">Message</label>
+            <label class="my-lg-3" for="subject">Сообщение</label>
             {{form.message}}
 
-            <input class='btn btnPrimary my-4' type="submit" value="Submit">
+            <input class='btn btnPrimary my-4' type="submit" value="Отправить">
         </form>
     </div>
   </div>

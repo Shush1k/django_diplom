@@ -32,16 +32,12 @@
                         {% get_categories as categories %}
 
                         {% for category in categories %}
-                            {#                             тот самый пример использования %url% #}
-                            {#                             работают оба варианта, поскольку есть метод get_absolute_url в самой модели Category#}
-
                             {% url 'movies:catt' category.url as catt_url %}
-                            {% if catt_url  == request.path %}
+                            {% if catt_url in request.path %}
                                 <li class="active">
                                     {% else %}
                                 <li>
                             {% endif %}<a href="{{ catt_url }}">{{ category.name }}</a></li>
-                            {#                            <li><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>#}
                         {% endfor %}
 {#                        {% endcache %}#}
                     </ul>
@@ -68,7 +64,7 @@
                 {% else %}
                         <li>
                     <a href="{% url 'login' %}">Войти</a> |
-                    <a href="{% url 'register' %}">Sign up</a>
+                    <a href="{% url 'register' %}">Создать аккаунт</a>
                     </li>
                 {% endif %}
             </ul>

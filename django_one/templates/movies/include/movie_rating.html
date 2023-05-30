@@ -1,0 +1,36 @@
+{% extends 'movies/base.html' %}
+
+{% load static %}
+{% load movie_tag %}
+{% load thumbnail %}
+
+{% block title %} {{ movie.title }} {% endblock title %}
+{% block container %}
+    <div class="container py-md-3">
+{% endblock container %}
+
+{% block sidebar %}
+    <div class="side-bar col-lg-4" hidden>
+{% endblock sidebar %}
+
+{% block movie %}
+
+    <div class="editContent">
+    {% get_rating as ratings %}
+    {% for rating in ratings %}
+        <div class="text-center mt-lg-4">
+            <h4>
+            <a href="{% url 'movies:movie_detail' rating.movie__url %}">
+                <img src="{% thumbnail rating.movie__poster 200x0 %}"alt="">
+    {#            <img src="{{MEDIA_URL}}{{ rating.movie__poster }}" class="img-fluid" alt="">#}
+                <p>{{ rating.movie__title }} {{ rating.avg|stringformat:".1f" }}</p>
+            </a>
+            </h4>
+        </div>
+    {% endfor %}
+    </div>
+
+    </div>
+</div>
+
+{% endblock movie %}

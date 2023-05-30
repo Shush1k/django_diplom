@@ -1,8 +1,8 @@
-venv
-.DS_Store
-cache/
-.idea
-.idea/workspace.xml
-.git/
-Dockerfile
-*pyc
+/.idea
+venv/
+
+/.env
+/.env.prod.db
+/.env.prod
+/.env.tests
+

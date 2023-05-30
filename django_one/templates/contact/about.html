@@ -20,30 +20,54 @@
                         </a>
                     </div>
                 </div>
-                <div class="desc1-right col-md-7">
+                <div class="desc1-right col-lg-7 ml-5">
 
-                    <h3 class="editContent">
-                        Написан на Django 4
-
+                    <h3>Автор:
+                        <span class="author">Александр Баранов</span>
                     </h3>
-                    <span><b>Дата написания сайта:</b> 05.05.2022 - 11.05.2022 </span>
+                    <span><b>Дата написания сайта:</b> 05.05.2022 - {% now "d.m.Y" %} </span>
 
 
                     <div class="mt-5">
-                        <h3 class="shop-sing">
-                            О сайте
-                        </h3>
+                        <h3>О сайте</h3>
                         <p>
-                            Данный сайт был создан в течении нескольких дней и является моим первым опытом работы с
-                            Django Framework.
+                            Данный сайт был создан мною и является моим первым опытом работы с Django.
                             При его создании я получил представление о паттерне MVT, научился строить url маршруты,
-                            модели и представления. Получил представление об административной панели.
+                            модели, представления и шаблоны. Получил представление об административной панели.
                             Данный сайт предоставляет информацию о фильмах, актерах и режисерах. Имеет поиск по фильмам,
-                            фильтарцию по жанрам и годам.
+                            фильтарцию по жанрам, возрастному рейтингу и годам. Позволяет сформировать рейтинги.
                             Имеет навигационную панель сверху, которая позволяет получать записи по определенной
                             категории. Каждый фильм/сериал и т.п. имеет свою отдельную странницу. Имеется возможность
-                            оставить комментарий.
+                            оставить комментарий. Имеется возможность авторизации на сайте, для завершения регистрации
+                            необходимо подтвердить учетную запись перейдя по ссылке, полученной в электронном письме.
                         </p>
+                        <h3>Навыки:</h3>
+                          <div class="devInfo__otherSkills">
+                            <span class="tag2 tag--pill tag--sub tag--lg">
+                              <small>Django</small>
+                            </span>
+                            <span class="tag2 tag--pill tag--sub tag--lg">
+                              <small>HTML</small>
+                            </span>
+                            <span class="tag2 tag--pill tag--sub tag--lg">
+                              <small>CSS</small>
+                            </span>
+                            <span class="tag2 tag--pill tag--sub tag--lg">
+                              <small>JS</small>
+                            </span>
+                            <span class="tag2 tag--pill tag--sub tag--lg">
+                              <small>Bootstrap 4</small>
+                            </span>
+                            <span class="tag--pill tag--sub tag--lg">
+                              <small>Postgres</small>
+                            </span>
+                            <span class="tag--pill tag--sub tag--lg">
+                              <small>Docker</small>
+                            </span>
+                            <span class="tag--pill tag--sub tag--lg">
+                              <small>NGINX</small>
+                            </span>
+                          </div>
                     </div>
                 </div>
             </div>

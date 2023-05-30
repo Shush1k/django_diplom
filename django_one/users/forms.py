@@ -11,7 +11,7 @@ User = get_user_model()
 
 
 class AuthenticationForm(DjAuthenticationForm):
-    username = UsernameField(label=_("Email"), initial="@gmail.com",
+    username = UsernameField(label=_("Email"),
                              widget=forms.TextInput(attrs={"autofocus": True, 'class': 'form-control col-sm-3',
                                                            "placeholder": "example@gmail.com"}))
     password = forms.CharField(

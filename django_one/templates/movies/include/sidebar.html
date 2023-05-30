@@ -1,8 +1,6 @@
 {% load movie_tag %}
-{% load cache %}
 
-{% cache 500 sidebar %}
-<div class="search-bar w3layouts-newsletter">
+<div class="search-bar pr-3">
     <h3 class="sear-head editContent" >Поиск фильма</h3>
     <form action="{% url 'movies:search' %}" method="get" class="d-flex editContent" >
         <input type="search" placeholder="Введите название..." name="search" class="form-control">
@@ -11,34 +9,36 @@
         </button>
     </form>
 </div>
-<!--preference -->
 
-<form action="{% url 'movies:filter' %}" method="get" name="filter">
-    <div class="left-side my-4">
-        <h3 class="sear-head editContent" >Жанры</h3>
-        <ul class="w3layouts-box-list">
+<form action="{% url 'movies:filter' %}" method="get" name="filter" style="width:80%">
+    <div class="row">
+
+        <div class="col">
+            <h3 class="sear-head editContent" >MPAA</h3>
+                <select name="mpaa" title="Рейтинг" class="selectpicker" multiple>
+                {% get_mpaa as mpaa %}
+                {% for label in mpaa %}
+                    <option value="{{ label.0 }}">{{ label.0 }}</option>
+                {% endfor %}
+                </select>
+        </div>
+
+        <div class="col">
+            <h3 class="sear-head editContent" >Жанры</h3>
+            <select name="genre" title="Жанры" class="selectpicker" multiple>
             {% get_genres as genres%}
             {% for genre in genres %}
-            <li class="editContent" >
-                <input type="checkbox" class="checked" name="genre" value="{{ genre.name }}">
-                <span class="span editContent" >{{ genre.name }}</span>
-            </li>
+                <option value="{{ genre.name }}">{{ genre.name }}</option>
             {% endfor %}
-        </ul>
-    </div>
+            </select>
+        </div>
 
-    <div class="left-side">
-        <h3 class="sear-head editContent" >Год</h3>
-        <ul class="w3layouts-box-list">
-            {% get_years as years%}
-            {% for year in years %}
-            <li class="editContent" >
-                <input type="checkbox" class="checked" name="year" value="{{ year.year }}">
-                <span class="span editContent" >{{ year.year }}</span>
-            </li>
-            {% endfor %}
-        </ul>
+        <div class="col-lg-4 pr-5" style="max-width:350px">
+            <h3 class="sear-head editContent" >Год</h3>
+            <div id="slider-date" class="my-3">
+                <input id="min-max" type="hidden" name="year">
+            </div>
+        </div>
+        <button type="submit" class="btn-2 col">Найти</button>
     </div>
-    <button type="submit" class="btn">Найти</button>
 </form>
-{% endcache %}

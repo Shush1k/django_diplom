@@ -32,21 +32,14 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class ReviewInline(admin.StackedInline):
     model = Reviews
-    readonly_fields = ("name", "email", "parent")
+    readonly_fields = ("parent",)
     extra = 1
 
 
 class ReviewTabular(admin.TabularInline):
     model = Reviews
-    readonly_fields = ("name", "email", "parent")
+    readonly_fields = ("parent",)
     extra = 1
-
-    # fieldsets = (
-    #     (None, {
-    #         "classes": ("collapse",),
-    #         "fields": (("text", "name", "email", "parent"),)
-    #     }),
-    # )
 
 
 class MovieShotsTabular(admin.TabularInline):
@@ -61,8 +54,8 @@ class MovieAdmin(admin.ModelAdmin):
     list_display_links = ("title",)
 
     search_fields = ("title", "category__name", "description")
-    list_filter = ("category__name", "draft")
-
+    list_filter = ("category__name", "draft", "year")
+    date_hierarchy = 'world_premiere'
     # inlines = [ReviewTabular] # отзывы
     inlines = [MovieShotsTabular]
     save_on_top = True
@@ -82,7 +75,7 @@ class MovieAdmin(admin.ModelAdmin):
             "fields": ("description", "poster")
         }),
         (None, {
-            "fields": (("year", "world_premiere", "country"),)
+            "fields": (("year", "world_premiere", "country", "mpaa_rating"),)
         }),
         ("Actors", {
             "classes": ("collapse",),
@@ -99,28 +92,27 @@ class MovieAdmin(admin.ModelAdmin):
 
 @admin.register(Reviews)
 class ReviewsAdmin(admin.ModelAdmin):
-    list_display = ("name", "email", "parent", "movie", "id")
-    readonly_fields = ("name", "email", "parent", "movie")
-
-    list_display_links = ("name", )
+    list_display = ("user", "parent", "movie", "created")
+    readonly_fields = ("user", "parent", "movie", "created")
+    list_filter = ("user", "movie")
 
 
 @admin.register(Actor)
 class ActorAdmin(admin.ModelAdmin):
-    list_display = ("name", "get_shot_image", "image")
+    list_display = ("name", "age", "get_actor_image", "image")
 
     search_fields = ("name",)
 
-    list_display_links = ("name", "get_shot_image")
+    list_display_links = ("name", "age", "get_actor_image")
 
-    fields = ("name", "birthday", "description", "image", "get_shot_image")
-    readonly_fields = ("get_shot_image",)
+    fields = ("name", "birthday", "age", "description", "image", "get_actor_image", "movies_list")
+    readonly_fields = ("movies_list", "age", "get_actor_image",)
 
-    def get_shot_image(self, obj):
+    def get_actor_image(self, obj):
         if obj.image:
             return mark_safe(f"<img src='{obj.image.url}' width=150 height=200>")
 
-    get_shot_image.short_description = "Фото"
+    get_actor_image.short_description = "Фото"
 
 
 @admin.register(MovieShots)

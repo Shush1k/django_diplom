@@ -3,35 +3,14 @@
 {% block title %} {{ category }} {% endblock title %}
 
 {% block movie %}
-<div class="left-ads-display col-lg-9">
+<div class="left-ads-display">
     <div class="row">
-        {% for movie in category_movies %}
-        <div class="col-md-4 product-men">
-            <div class="product-shoe-info editContent text-center mt-lg-4">
-                <div class="men-thumb-item">
-                    <a href="{{ movie.get_absolute_url }}">
-                    <img src="{{ movie.poster.url }}" class="img-fluid" alt="">
-                    </a>
-                </div>
-                <div class="item-info-product">
-                    <h4 class="">
-                        <a href="{{ movie.get_absolute_url }}" class="editContent">
-                            {{ movie.title }}
-                        </a>
-                    </h4>
-
-                    <div class="tagline">
-                        <span class="tag editContent">
-                            {{ movie.tagline }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% for movie in movies %}
+            {% include 'movies/include/movie_preview.html' %}
         {% endfor %}
     </div>
-        <div class="grid-img-right mt-4 text-right bg bg1" >
-            {% include './include/pagination.html' %}
+        <div class="mt-4 text-right bg bg1" >
+            {% include 'movies/include/pagination.html' %}
         </div>
 </div>
 {% endblock movie %}

@@ -1,21 +1,20 @@
 {% extends 'movies/base.html' %}
 
+{% load movie_tag %}
 {% load static %}
 {% block title %} {{ movie.title }} {% endblock title %}
 {% block container %}
     <div class="container py-md-3">
 {% endblock container %}
 
-{% block sidebar %}
-    <div class="side-bar col-lg-4">
-{% endblock sidebar %}
 {% load humanize %}
 
 
 {% block movie %}
     <div class="left-ads-display col-lg-8">
-        <div class="row">
+        <div class="row mt-5">
             <div class="col-md-6">
+{#                {{ movie.poster.url|default:'/images/product-img-default.png' }}#}
                 <img src="{{ movie.poster.url }}" class="img-fluid" alt="">
             </div>
             <div class="desc1-right col-md-6 pl-lg-4">
@@ -30,6 +29,9 @@
                     </li>
                     <li style="list-style: none">
                         <span><b>Слоган:</b> {{ movie.tagline }}</span>
+                    </li>
+                    <li style="list-style: none">
+                        <span><b>Возрастное ограничение:</b> {{ movie.mpaa_rating }}</span>
                     </li>
                     <li style="list-style: none">
                                     <span><b>Режиссер:</b>
@@ -68,54 +70,30 @@
                             {% csrf_token %}
                             <input type="hidden" value="{{ movie.id }}" name="movie">
                             <b>Рейтинг:</b>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 20" fill="#ff9b3d" width="20px"><path d="M21.15 7.6a.64.64 0 0 0-.6-.45l-7.05-.14L11.2.43a.63.63 0 0 0-1.2 0L7.67 7l-7.05.14a.63.63 0 0 0-.59.44c-.08.26 0 .54.22.7l5.62 4.22-2.04 6.67a.64.64 0 0 0 .97.71l5.79-3.99 5.8 3.99a.64.64 0 0 0 .73-.01c.22-.16.3-.44.23-.7l-2.04-6.67 5.62-4.21c.21-.17.3-.45.22-.7"></path></svg>
+                                <span class="avg-rating">{{ movie.avg_rating|stringformat:".1f" }}</span>
+                                <br>
+                                {% if not user.is_anonymous %}
                                 <span class="rating">
                                     {% for k, v in star_form.fields.star.choices%}
                                         <input id="rating{{ v }}" type="radio" name="star"
                                            value="{{ k }}">
                                         <label for="rating{{ v }}">{{ k }}</label>
                                     {% endfor %}
-
                                 </span>
-{#                                {% for rating in movie.ratings.all %}#}
-{#                                    <span class="avg-rating"> {{ rating.star }}</span>#}
-{#                                {% endfor %}#}
-                            {% if movie.get_rating %}
-                                <span class="avg-rating">{{ movie.get_rating }}</span>
-                            {% else %}
-                                <span class="avg-rating">—</span>
-                            {% endif %}
-
+                                {% endif %}
                         </form>
                     </li>
-
-
-                    <!-- <div class="share-desc">
-                        <div class="share">
-                            <h4 class="editContent"
-                                style="outline: none; cursor: inherit;">
-                                Share:</h4>
-                            <ul class="w3layouts_social_list list-unstyled">
-                                <li>
-                                    <a href="#" class="w3pvt_facebook editContent"
-                                       style="outline: none; cursor: inherit;">
-                                                <span class="fa fa-facebook-f"
-                                                      style="outline: none; cursor: inherit;"></span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="w3pvt_twitter editContent"
-                                       style="outline: none; cursor: inherit;">
-                                                <span class="fa fa-twitter"
-                                                      style="outline: none; cursor: inherit;"></span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="w3pvt_dribble editContent"
-                                       style="outline: none; cursor: inherit;">
-                                                <span class="fa fa-dribbble"
-                                                      style="outline: none; cursor: inherit;"></span>
-                                    </a>
-                                </li> -->
+                    <li style="list-style: none">
+                        {% get_user_vote_rating user.get_username movie.id as user_vote %}
+                        {% for vote in user_vote %}
+                            <span><b>Ваша оценка:</b> {{ vote }} </span>
+                        {% endfor %}
+                    </li>
+                    <li style="list-style: none">
+                    {% with total_reviews=movie.reviews_set.count %}
+                        <span><b>Отзывы:</b> {{ total_reviews }}</span>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -128,26 +106,64 @@
         <h3 class="shop-sing editContent">О {{ movie.title }}</h3>
         <p class="editContent">{{ movie.description|safe }}</p>
     </div>
-{#    {% if movie.movieshots_set.all %}#}
     <div class="mt-3">
         <h3>Кадры к фильму</h3>
-        <span>
+{#        <div class="row">#}
             {% for image in movie.movieshots_set.all %}
-                <img src="{{ image.image.url }}" class="img-movie-shots" title="{{ image.description }}"
+                    <a href="{{ image.image.url }}">
+                        <img src="{{ image.image.url }}" class="img-movie-shots" title="{{ image.description }}"
                      alt="{{ image.description }}">
+                    </a>
             {% endfor %}
-        </span>
+{#        </div>#}
     </div>
-{#    {% endif %}#}
 
     <hr>
-    <div class="dline row">
-        <div class="single-form-left">
+    <div class="row ml-3 ">
+        <div class="col dblock">
+                <h4>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 121.86 122.88" width="30px">
+                        <title>comment</title>
+                        <path d="M30.28,110.09,49.37,91.78A3.84,3.84,0,0,1,52,90.72h60a2.15,2.15,0,0,0,2.16-2.16V9.82a2.16,2.16,0,0,0-.64-1.52A2.19,2.19,0,0,0,112,7.66H9.82A2.24,2.24,0,0,0,7.65,9.82V88.55a2.19,2.19,0,0,0,2.17,2.16H26.46a3.83,3.83,0,0,1,3.82,3.83v15.55ZM28.45,63.56a3.83,3.83,0,1,1,0-7.66h53a3.83,3.83,0,0,1,0,7.66Zm0-24.86a3.83,3.83,0,1,1,0-7.65h65a3.83,3.83,0,0,1,0,7.65ZM53.54,98.36,29.27,121.64a3.82,3.82,0,0,1-6.64-2.59V98.36H9.82A9.87,9.87,0,0,1,0,88.55V9.82A9.9,9.9,0,0,1,9.82,0H112a9.87,9.87,0,0,1,9.82,9.82V88.55A9.85,9.85,0,0,1,112,98.36Z"></path>
+                    </svg>
+                    {{ total_reviews }}
+                    {% endwith %}
+                </h4>
+            {% static 'images/default_img.png' as default_avatar %}
+            {% for review in movie.get_review %}
+                <div class="media py-3">
+                    <div class="mt-4 img-avatar-comment" style="background-color: #bababa">
+                        <img src="{{ default_avatar }}" class="img-avatar" alt="image">
+                    </div>
+
+                    <div class="media-body mt-4 ml-3">
+                        <h5 class="mt-0 editContent"> {{ review.user.username }}</h5>
+                        <p>{{ review.created|date:'d.m.Y H:i' }}</p>
+                        <p>{{ review.text }}</p>
+                        <a href="#formReview" onclick="addReview('{{ review.user.username }}', '{{ review.id }}')">Ответить</a>
+
+                        {% for rew in review.children %}
+                            <div class="media mt-3 editContent">
+                                <div class="mr-3 img-avatar-comment" style="background-color: #bababa">
+                                    <img src="{{ default_avatar }}" class="img-avatar ">
+                                </div>
+                                <div class="media-body">
+                                    <h5 class="mt-0 editContent"> {{ rew.user.username }}</h5>
+                                    <p>{{ rew.created|date:'d.m.Y H:i' }}</p>
+                                    <p>{{ rew.text }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% if not user.is_anonymous %}
+        <div class="col single-form-left ml-3">
             <div class="contact-single">
                 <h3 class="editContent">
                     Оставить отзыв
                 </h3>
-                <span class="sub-tittle editContent">{{ movie.reviews_set.count }}</span>
                 <form action="{% url 'movies:add_review' movie.id %}" method="post" class="mt-4" id="formReview">
                     {% csrf_token %}
                     <input type="hidden" name="parent" id="contactparent" value="">
@@ -158,22 +174,7 @@
                         <textarea class="form-control border" rows="5" name="text"
                                   id="contactcomment" required=""></textarea>
                     </div>
-                    <div class="d-sm-flex">
-                        <div class="col-sm-6 form-group p-0 editContent">
-                            <label for="contactusername" class="editContent">
-                                Имя *
-                            </label>
-                            <input type="text" class="form-control border" name="name"
-                                   id="contactusername" required="">
-                        </div>
-                        <div class="col-sm-6 form-group ml-sm-3 editContent">
-                            <label for="contactemail" class="editContent">
-                                Email *
-                            </label>
-                            <input type="email" class="form-control border" name="email"
-                                   id="contactemail" required="">
-                        </div>
-                    </div>
+
                     <button type="submit"
                             class="mt-3 btn btn-success btn-block py-3">
                         Отправить
@@ -181,42 +182,16 @@
                 </form>
             </div>
         </div>
-        <div class="dblock">
-            <h3>Комментарии</h3>
-            {% static 'images/default_avatar.jpeg' as default_avatar %}
-            {% for review in movie.get_review %}
-                <div class="media py-3">
-                    <img src="{{ default_avatar }}" class="mr-3 img-avatar" alt="image">
-                    <div class="media-body mt-4">
-                        <h5 class="mt-0 editContent"> {{ review.name }}</h5>
-                        <p class="mt-2 editContent">
-                            {{ review.text }}
-                        </p>
-                        <a href="#formReview" onclick="addReview('{{ review.name }}', '{{ review.id }}')">Ответить</a>
+        {% else %}
+            <h2>Чтобы оставлять отзывы необходима авторизация</h2>
+        {% endif %}
 
-                        {% for rew in review.reviews_set.all %}
-                            <div class="media mt-3 editContent">
-                                <a class="pr-3" href="#">
-                                    <img src="{{ default_avatar }}" class="img-avatar ">
-                                </a>
-                                <div class="media-body">
-                                    <h5 class="mt-0 editContent"> {{ rew.name }}</h5>
-                                    <p class="mt-2 editContent">
-                                        {{ rew.text }}
-                                    </p>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
     </div>
     </div>
     <script>
         function addReview(name, id) {
             document.getElementById("contactparent").value = id;
-            document.getElementById("contactcomment").innerText = `${name},`;
+            document.getElementById("contactcomment").innerText = `${name}, `;
         }
     </script>
 {% endblock movie %}
