@@ -1,6 +1,6 @@
 import datetime
 import pytest
-from movies.models import Category, Actor, Genre, MovieShots
+from movies.models import Category, Actor, Genre, MovieShots, Movie
 from django.db import IntegrityError
 
 
@@ -176,4 +176,36 @@ class TestMovieShotsModel:
         assert model_name == 'k1'
 
 
-# TODO TestMovieModel
+@pytest.mark.django_db
+class TestMovieModel:
+    """Тесты модели Movie"""
+    def test_movie_shots_count(self):
+        assert Movie.objects.count() == 0
+
+    def test_get_movie(self, movie1):
+        """Тест получения объекта"""
+        movie = Movie.objects.first()
+        assert isinstance(movie, Movie)
+        assert Movie.objects.count() == 1, 'должен быть 1 объект'
+
+    def test_check_values(self, movie1, category1):
+        """Тест проверки значений"""
+        assert movie1.title == "Бойцовский клуб"
+        assert movie1.tagline == "«Интриги. Хаос. Мыло»"
+        assert movie1.mpaa_rating == "NOT RATED"
+        assert movie1.poster == "movies/p.jpeg"
+        assert movie1.year == 1999
+        assert movie1.country == "США"
+        assert movie1.world_premiere == datetime.date(1999, 9, 10)
+        assert movie1.budget == 63000000
+        assert movie1.fees_in_usa == 37030102
+        assert movie1.fess_in_world == 100853753
+        assert movie1.category_id == category1.id
+        assert movie1.url == "fight_club"
+        assert movie1.draft is False
+
+    def test_model_str(self, movie1):
+        """Тест метода __str__"""
+        model_name = movie1.__str__()
+        assert model_name == 'Бойцовский клуб'
+
