@@ -1,6 +1,6 @@
 import datetime
 import pytest
-from movies.models import Category, Actor, Genre, MovieShots
+from movies.models import Category, Actor, Genre, MovieShots, Movie, Reviews
 from django.db import IntegrityError
 
 
@@ -39,6 +39,40 @@ MODEL_FIELDS = [
             'movie_id',
         ],
     ],
+    [
+        Movie,
+        [
+            'title',
+            'tagline',
+            'mpaa_rating',
+            'description',
+            'poster',
+            'year',
+            'country',
+            'world_premiere',
+            'budget',
+            'fees_in_usa',
+            'fess_in_world',
+            'category_id',
+            'url',
+            'draft',
+        ],
+    ],
+    [
+        Reviews,
+        [
+            'text',
+            'created',
+            'parent_id',
+            'movie_id',
+            'user_id',
+        ],
+    ],
+]
+
+
+MODEL_M2M_FIELDS = [
+    [Movie, ['directors', 'actors', 'genres']],
 ]
 
 
@@ -54,8 +88,20 @@ class TestModels:
         argnames=['model_name', 'expected_fields'], argvalues=MODEL_FIELDS
     )
     def test_model_fields(self, model_name, expected_fields):
-        """Test user model specific fields"""
+        """Test model specific fields"""
         model_fields = model_name._meta.fields
+        for test_field in expected_fields:
+            field = search_field(model_fields, test_field)
+            assert (
+                    field is not None
+            ), f'Поле {test_field} не найдено в модели {model_name}'
+
+    @pytest.mark.parametrize(
+        argnames=['model_name', 'expected_fields'], argvalues=MODEL_M2M_FIELDS
+    )
+    def test_model_m2m_fields(self, model_name, expected_fields):
+        """Test model m2m specific fields"""
+        model_fields = model_name._meta.many_to_many
         for test_field in expected_fields:
             field = search_field(model_fields, test_field)
             assert (
@@ -176,4 +222,65 @@ class TestMovieShotsModel:
         assert model_name == 'k1'
 
 
-# TODO TestMovieModel
+@pytest.mark.django_db
+class TestMovieModel:
+    """Тесты модели Movie"""
+    def test_movie_shots_count(self):
+        assert Movie.objects.count() == 0
+
+    def test_get_movie(self, movie1):
+        """Тест получения объекта"""
+        movie = Movie.objects.first()
+        assert isinstance(movie, Movie)
+        assert Movie.objects.count() == 1, 'должен быть 1 объект'
+
+    def test_check_values(self, movie1, category1):
+        """Тест проверки значений"""
+        assert movie1.title == "Бойцовский клуб"
+        assert movie1.tagline == "«Интриги. Хаос. Мыло»"
+        assert movie1.mpaa_rating == "NOT RATED"
+        assert movie1.poster == "movies/p.jpeg"
+        assert movie1.year == 1999
+        assert movie1.country == "США"
+        assert movie1.world_premiere == datetime.date(1999, 9, 10)
+        assert movie1.budget == 63000000
+        assert movie1.fees_in_usa == 37030102
+        assert movie1.fess_in_world == 100853753
+        assert movie1.category_id == category1.id
+        assert movie1.url == "fight_club"
+        assert movie1.draft is False
+
+    def test_model_str(self, movie1):
+        """Тест метода __str__"""
+        model_name = movie1.__str__()
+        assert model_name == 'Бойцовский клуб'
+
+
+@pytest.mark.django_db
+class TestReviewsModel:
+    """Тесты модели Reviews"""
+    def test_reviews_count(self):
+        assert Reviews.objects.count() == 0
+
+    def test_get_review(self, review1):
+        """Тест получения объекта"""
+        review = Reviews.objects.first()
+        assert isinstance(review, Reviews)
+        assert Reviews.objects.count() == 1, 'должен быть 1 объект'
+
+    def test_check_values(self, review1, review2, movie1, user1):
+        """Тест проверки значений"""
+        assert review1.text == "Не информативный отзыв. Родительский комментарий"
+        assert review1.parent is None
+        assert review1.movie == movie1
+        assert review1.user == user1
+
+        assert review2.text == "Информативный отзыв. Ответ от дочернего отзыва на родительский"
+        assert review2.parent == review1
+        assert review2.movie == movie1
+        assert review2.user == user1
+
+    def test_model_str(self, review1):
+        """Тест метода __str__"""
+        model_name = review1.__str__()
+        assert model_name == str(review1.user) + " - " + str(review1.movie)

@@ -1,11 +1,15 @@
 import datetime
 
 import pytest
-from movies.models import Category, Actor, Genre, MovieShots, Movie
+from django.contrib.auth import get_user_model
+
+from movies.models import Category, Actor, Genre, MovieShots, Movie, Reviews
+
+User = get_user_model()
 
 
 @pytest.fixture
-def user(django_user_model):
+def user1(django_user_model):
     return django_user_model.objects.create_user(
         username='Tester',
         first_name='',
@@ -66,3 +70,21 @@ def movie1(actor1, genre1, category1):
 def movie_shots1(movie1):
     return MovieShots.objects.create(title="k1", description="Кадр с осколком тарелки",
                                      image="movie_shots/x504.jpeg", movie=movie1)
+
+
+@pytest.fixture
+def review1(movie1, user1):
+    return Reviews.objects.create(text="Не информативный отзыв. Родительский комментарий",
+                                  created=datetime.datetime(2023, 2, 23, 17, 11, 9, 186641),
+                                  parent=None,
+                                  movie=movie1,
+                                  user=user1)
+
+
+@pytest.fixture
+def review2(review1, movie1, user1):
+    return Reviews.objects.create(text="Информативный отзыв. Ответ от дочернего отзыва на родительский",
+                                  created=datetime.datetime(2023, 2, 23, 17, 17, 18, 519192),
+                                  parent=review1,
+                                  movie=movie1,
+                                  user=user1)
