@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from users.utils import send_email
+from users.tasks import send_feedback_email_task
 
 User = get_user_model()
 
@@ -39,6 +40,9 @@ class AuthenticationForm(DjAuthenticationForm):
 
             if not self.user_cache.email_verify:
                 send_email(self.request, self.user_cache)
+                # send_feedback_email_task.delay(
+                #     self.cleaned_data["username"], "Письмо авторизации"
+                # )
                 raise ValidationError(
                     "Email не верифицирован, проверьте почту!",
                     code="invalid_login",
