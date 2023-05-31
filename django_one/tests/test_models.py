@@ -39,6 +39,40 @@ MODEL_FIELDS = [
             'movie_id',
         ],
     ],
+    [
+        Movie,
+        [
+            'title',
+            'tagline',
+            'mpaa_rating',
+            'description',
+            'poster',
+            'year',
+            'country',
+            'world_premiere',
+            'budget',
+            'fees_in_usa',
+            'fess_in_world',
+            'category_id',
+            'url',
+            'draft',
+        ],
+    ],
+    [
+        Reviews,
+        [
+            'text',
+            'created',
+            'parent_id',
+            'movie_id',
+            'user_id',
+        ],
+    ],
+]
+
+
+MODEL_M2M_FIELDS = [
+    [Movie, ['directors', 'actors', 'genres']],
 ]
 
 
@@ -56,6 +90,18 @@ class TestModels:
     def test_model_fields(self, model_name, expected_fields):
         """Test model specific fields"""
         model_fields = model_name._meta.fields
+        for test_field in expected_fields:
+            field = search_field(model_fields, test_field)
+            assert (
+                    field is not None
+            ), f'Поле {test_field} не найдено в модели {model_name}'
+
+    @pytest.mark.parametrize(
+        argnames=['model_name', 'expected_fields'], argvalues=MODEL_M2M_FIELDS
+    )
+    def test_model_m2m_fields(self, model_name, expected_fields):
+        """Test model m2m specific fields"""
+        model_fields = model_name._meta.many_to_many
         for test_field in expected_fields:
             field = search_field(model_fields, test_field)
             assert (
