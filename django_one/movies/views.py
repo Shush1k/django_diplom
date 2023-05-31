@@ -119,7 +119,7 @@ class Search(MovieMixin, ListView):
     paginate_by = 8
 
     def get_queryset(self):
-        query = self.request.GET.get("search")
+        query = self.request.GET.get("search", '')
         return self.queryset.filter(Q(title__icontains=query) |
                                     Q(title__icontains=query.capitalize())
                                     ).only("title", "poster", "url").order_by('title')
