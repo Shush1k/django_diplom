@@ -1,6 +1,6 @@
 import datetime
 import pytest
-from movies.models import Category, Actor, Genre, MovieShots, Movie
+from movies.models import Category, Actor, Genre, MovieShots, Movie, Reviews
 from django.db import IntegrityError
 
 
@@ -54,7 +54,7 @@ class TestModels:
         argnames=['model_name', 'expected_fields'], argvalues=MODEL_FIELDS
     )
     def test_model_fields(self, model_name, expected_fields):
-        """Test user model specific fields"""
+        """Test model specific fields"""
         model_fields = model_name._meta.fields
         for test_field in expected_fields:
             field = search_field(model_fields, test_field)
@@ -209,3 +209,32 @@ class TestMovieModel:
         model_name = movie1.__str__()
         assert model_name == 'Бойцовский клуб'
 
+
+@pytest.mark.django_db
+class TestReviewsModel:
+    """Тесты модели Reviews"""
+    def test_reviews_count(self):
+        assert Reviews.objects.count() == 0
+
+    def test_get_review(self, review1):
+        """Тест получения объекта"""
+        review = Reviews.objects.first()
+        assert isinstance(review, Reviews)
+        assert Reviews.objects.count() == 1, 'должен быть 1 объект'
+
+    def test_check_values(self, review1, review2, movie1, user1):
+        """Тест проверки значений"""
+        assert review1.text == "Не информативный отзыв. Родительский комментарий"
+        assert review1.parent is None
+        assert review1.movie == movie1
+        assert review1.user == user1
+
+        assert review2.text == "Информативный отзыв. Ответ от дочернего отзыва на родительский"
+        assert review2.parent == review1
+        assert review2.movie == movie1
+        assert review2.user == user1
+
+    def test_model_str(self, review1):
+        """Тест метода __str__"""
+        model_name = review1.__str__()
+        assert model_name == str(review1.user) + " - " + str(review1.movie)
