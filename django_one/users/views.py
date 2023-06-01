@@ -7,7 +7,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.views import View
 
 from users.forms import UserCreationForm, AuthenticationForm
-from users.utils import send_email
+from users.utils import send_verify_email
 
 User = get_user_model()
 
@@ -31,7 +31,7 @@ class Register(View):
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password1')
             user = authenticate(email=email, password=password)
-            send_email(request, user)
+            send_verify_email(request, user)
 
             return redirect("confirm_email")
         context = {
