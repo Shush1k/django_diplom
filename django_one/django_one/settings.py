@@ -38,8 +38,6 @@ AUTH_USER_MODEL = 'users.User'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 
 # Application definition
 
@@ -267,3 +265,16 @@ CACHES = {
         'LOCATION': os.path.join(BASE_DIR, 'cache'),
     }
 }
+
+# SMTP
+EMAIL_HOST_USER = "xxx@gmail.com"
+# EMAIL_HOST, EMAIL_HOST_PASSWORD, EMAIL_PORT
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+# Celery
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_IMPORTS = [
+    'users.tasks',
+]
