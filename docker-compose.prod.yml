@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  web:
+    container_name: gunicorn_django
+    build:
+      context: .
+    volumes:
+      - static:/app/static/
+      - media:/app/media/
+    expose:
+      - 8001
+    env_file:
+      - .env.prod
+    depends_on:
+      - db
+  db:
+    container_name: postgres
+    image: postgres:15
+    volumes:
+      - learn_django_postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env.prod.db
+  redis:
+    container_name: redis
+    restart: unless-stopped
+    image: redis:7-alpine
+    expose:
+      - 6379
+  nginx:
+    container_name: nginx
+    build: ./nginx
+    volumes:
+      - static:/app/static/
+      - media:/app/media
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+volumes:
+  learn_django_postgres_data:
+    external: true
+  static:
+  media:
